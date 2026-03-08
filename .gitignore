@@ -37,3 +37,96 @@ downloads/
 sstate-cache/
 toaster.sqlite
 .vscode/
+
+
+# =============================================================================
+# Yocto / OpenEmbedded — Build Artifacts & Cache
+# =============================================================================
+
+# Main build output directory (can be gigabytes)
+build/tmp/
+build/cache/
+build/sstate-cache/
+build/downloads/
+
+# BitBake lock files and run data
+build/bitbake.lock
+build/pseudodone
+build/.pseudo_lock
+
+# BitBake hash equivalence database
+build/hashserve.sock
+build/cache/
+
+# =============================================================================
+# Yocto Config — Keep conf/ BUT ignore generated/local overrides
+# =============================================================================
+
+# Keep these (explicitly tracked):
+# build/conf/local.conf
+# build/conf/bblayers.conf
+# build/conf/templateconf.cfg
+
+# Ignore sanity check stamps
+build/conf/sanity_info
+
+# =============================================================================
+# Downloaded Source Tarballs & Mirrors
+# =============================================================================
+downloads/
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.zip
+*.tgz
+
+# =============================================================================
+# Deploy / Output Images
+# =============================================================================
+build/tmp/deploy/
+*.wic
+*.wic.bz2
+*.wic.xz
+*.ext4
+*.rpi-sdimg
+*.manifest
+*.testdata.json
+
+# =============================================================================
+# Shared State Cache
+# =============================================================================
+sstate-cache/
+
+# =============================================================================
+# Editor & IDE
+# =============================================================================
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/*.code-workspace
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*.pyo
+.eggs/
+
+# =============================================================================
+# Logs
+# =============================================================================
+*.log
+cooker/
+pseudodone
+
+# =============================================================================
+# Repo tool (if used)
+# =============================================================================
+.repo/
