@@ -91,3 +91,8 @@ pseudodone
 .repo/
 .vscode/extensions.json
 .vscode/settings_123.json
+
+# =============================================================================
+# BSP / Board Support Package
+# =============================================================================
+meta-raspberrypi

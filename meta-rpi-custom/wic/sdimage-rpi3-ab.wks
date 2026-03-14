@@ -1,0 +1,54 @@
+# short-description: Create Raspberry Pi 3 SD card image with A/B rootfs
+# long-description: Creates a partitioned SD card image for Raspberry Pi 3 with
+# boot partition, two rootfs partitions (A/B for OTA updates), and persistent data partition
+#
+# BOOT AND PARTITION SELECTION:
+# ==============================
+# Partition 1 (/boot):     Shared boot partition (FAT32, 100MB)
+#   - Contains: kernel, dtb, bootloader files
+#   - GPU reads config.txt from here to determine root device
+#   - Marked --active (MBR bootable flag)
+#   - ALWAYS used for booting (kernel/DTB source)
+#
+# Partition 2 (rootfs-a):  Primary root filesystem (ext4, 500MB)
+#   - Default root filesystem on first boot
+#   - Kernel mounted as "/" via root= kernel parameter
+#   - OTA can write new image here when rootfs-b is active
+#
+# Partition 3 (rootfs-b):  Secondary root filesystem (ext4, 500MB)
+#   - Standby filesystem for A/B OTA updates
+#   - When new image is available, it's written here
+#   - Bootloader switches root= parameter to point here after validation
+#   - Falls back to rootfs-a if boot fails
+#
+# Partition 4 (/data):     Persistent data partition (ext4, remaining)
+#   - Preserved during OTA updates
+#   - Available for application data, logs, configs
+#
+# OTA UPDATE FLOW:
+# ================
+# 1. System running rootfs-a, writes new image to rootfs-b
+# 2. Update manager sets boot flag/variable: root=/dev/mmcblk0p3
+# 3. Next reboot: bootloader reads flag, kernel mounts rootfs-b
+# 4. If boot successful: mark rootfs-b as active permanently
+# 5. If boot fails: rollback to rootfs-a automatically
+#
+# KERNEL COMMAND LINE (set in config.txt or bootloader):
+# =======================================================
+# Default (first boot):  root=/dev/mmcblk0p2 rootwait ro
+# After update to B:     root=/dev/mmcblk0p3 rootwait ro
+#
+# This is controlled by an OTA update manager service that:
+#  - Reads active partition from persistent storage (/data)
+#  - Modifies config.txt or bootloader environment
+#  - Verifies boot and commits the update
+
+part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 4096 --size 100
+
+part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfs-a --align 4096 --size 500
+
+part --ondisk mmcblk0 --fstype=ext4 --label rootfs-b --align 4096 --size 500
+
+part /data --ondisk mmcblk0 --fstype=ext4 --label persistent --align 4096 --size 2G
+
+bootloader --ptable msdos --timeout 0

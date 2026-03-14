@@ -9,3 +9,5 @@ source oe-init-build-env
 
 
 bitbake core-image-base
+
+#sudo bmaptool copy --bmap build/tmp/deploy/images/raspberrypi3/core-image-base-raspberrypi3.rootfs.wic.bmap build/tmp/deploy/images/raspberrypi3/core-image-base-raspberrypi3.rootfs.wic /dev/sdb
