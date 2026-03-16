@@ -1,0 +1,15 @@
+software =
+{
+    version = "1.0.0";
+    description = "OTA update";
+
+    hardware-compatibility = [ "0xA02082", "a02082", "A02082" ];
+
+    images: (
+        {
+            filename = "core-image-base-raspberrypi3.rootfs.ext4";
+            device = "/dev/mmcblk0p3";
+            type = "raw";
+        }
+    );
+}
